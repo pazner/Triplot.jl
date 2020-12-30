@@ -9,8 +9,8 @@ inspired by https://matplotlib.org[matplotlib].
 
 Some simple examples are provided in `examples/example.jl`.
 
-image::examples/diag.png[diag]
+image::examples/diag.png[diag,500,500]
 
-image::examples/peaks.png[peaks]
+image::examples/peaks.png[peaks,500,500]
 
-image::examples/sine.png[sine]
+image::examples/sine.png[sine,500,500]
