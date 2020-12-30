@@ -129,7 +129,7 @@ function add_filled_bdr_lines!(contours, m::TriMesh, z, lower, upper)
                     edge == start_edge && break
                 end
                 # Ensure closed loop
-                first(contour) != last(contour) && push!(contour, first(contour))
+                push!(contour, first(contour))
                 push!(contours, contour)
             end
         end
@@ -148,6 +148,7 @@ function add_filled_bdr_lines!(contours, m::TriMesh, z, lower, upper)
                 point = m.t[edge.ie,edge.it]
                 push!(contour, (m.x[point], m.y[point]))
             end
+            push!(contour, first(contour))
             push!(contours,contour)
         end
     end

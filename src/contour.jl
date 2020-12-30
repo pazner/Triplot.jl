@@ -141,7 +141,7 @@ function add_interior_lines!(contours, m::TriMesh, z, level; on_upper, filled)
         # Found a new outgoing contour line, start from neighbor
         edge = get_neighbor_edge(m, TriEdge(ie,it))
         contour,_ = follow_interior(m, edge, z, level; on_upper, end_on_bdr=false)
-        push!(contour, contour[1]) # Make closed loop
+        push!(contour, first(contour)) # Make closed loop
         push!(contours, contour)
     end
 end
