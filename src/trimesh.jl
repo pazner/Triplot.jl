@@ -54,7 +54,7 @@ function TriMesh(x, y, t)
     while !isempty(bdr_edges)
         bdr = Vector{TriEdge}()
         push!(bdr_loops, bdr)
-        first_edge = first(bdr_edges)
+        first_edge = first(bdr_edges.dict)[1] # same as first(bdr_edges), slightly faster
         edge = first_edge
         while true
             push!(bdr, edge)
