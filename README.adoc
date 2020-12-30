@@ -1,0 +1,16 @@
+= Tricontour.jl
+
+This package provides functionality for drawing contour lines and filled contour
+regions for data defined on unstructured triangular in Julia. The plotting
+functionality is based on https://gr-framework.org[GR]. The algorithm is
+inspired by https://matplotlib.org[matplotlib].
+
+== Examples
+
+Some simple examples are provided in `examples/example.jl`.
+
+image::examples/diag.png[diag]
+
+image::examples/peaks.png[peaks]
+
+image::examples/sine.png[sine]
