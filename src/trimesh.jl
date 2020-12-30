@@ -4,16 +4,16 @@ struct TriEdge
 end
 
 struct TriMesh{X,Y,T}
-    x::X # x-coordinates of the vertices, vector of shape nv
+    x::X # x-coordinates of the vertices, vector of length nv
     y::Y # y-coordinates of the verties, vector of length nv
-    t::T # vertex indices of the triangles, array of size (3,nt)
-    neighbors::Array{Int,2} # adjacency list of the mesh, array of size (3,nt)
-    # Note: neighbors[e,t] is index of triangle neighboring edge `e` of triangle `t`.
+    t::T # Vertex indices of the triangles, array of size (3,nt)
+    neighbors::Array{Int,2} # Adjacency list of the mesh, array of size (3,nt)
+    # Note: neighbors[ie,it] is index of triangle neighboring edge `ie` of triangle `it`
     bdr_loops::Vector{Vector{TriEdge}}
-    bdr_map::Dict{TriEdge,Tuple{Int,Int}} # map from edge index to boundary indices
+    bdr_map::Dict{TriEdge,Tuple{Int,Int}} # Map from edge index to boundary indices
     visited::Vector{Bool} # Keep track of visited elements for internal calculations
     bdr_visited::Vector{Vector{Bool}} # Keep track of visited boundary edges
-    bdr_used::Vector{Bool}
+    bdr_used::Vector{Bool} # Keep track of which boundary loops are used for filled contours
 end
 
 function TriMesh(x, y, t)

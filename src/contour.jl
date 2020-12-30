@@ -67,21 +67,14 @@ function interp(m::TriMesh, edge::TriEdge, z, level)
     interp(m, p1, p2, z, level)
 end
 
+const exit_edges = [0,3,1,3,2,2,1,0] # Lookup table for exit edges using encoded config
+
 function get_exit_edge(m::TriMesh, it, z, level; on_upper)
     config = (z[m.t[1,it]] >= level) |
              (z[m.t[2,it]] >= level) << 1 |
              (z[m.t[3,it]] >= level) << 2
     on_upper && (config = 7-config)
-    if config == 0 return 0
-    elseif config == 1 return 3
-    elseif config == 2 return 1
-    elseif config == 3 return 3
-    elseif config == 4 return 2
-    elseif config == 5 return 2
-    elseif config == 6 return 1
-    elseif config == 7 return 0
-    else error("Invalid config value")
-    end
+    exit_edges[config+1]
 end
 
 function follow_interior!(contour::Contour, m::TriMesh, edge::TriEdge, z, level;
