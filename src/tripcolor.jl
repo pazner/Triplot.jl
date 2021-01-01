@@ -1,7 +1,7 @@
 import LinearAlgebra: lu
 
 """
-    tripcolor(x, y, z, t; cmin=nothing, cmax=nothing)
+    tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
 
 Draw a pseudocolor plot of unstructured triangular data. `x`, `y`, and `z` are
 one-dimensional input arrays of the same length (the number of points). `t` is an integer
@@ -54,7 +54,7 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             valid = all((λ .>= -tol) .& (λ .<= 1+tol))
             # If pixel is outside of triangle, move on to next pixel
             !valid  && continue
-            zval = zt'*[λ1,λ2,λ3]
+            zval = clamp(zt'*[λ1,λ2,λ3],zmin,zmax)
             c[i+1,py-j] = getcolorind(zval,zmin,zmax)
         end
     end
