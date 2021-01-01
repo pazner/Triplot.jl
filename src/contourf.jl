@@ -1,8 +1,11 @@
 """
     tricontourf(x, y, z, t, levels)
 
-Draw a filled contour plot of unstructured triangular data. The arguments `x`, `y`, `z`,
-`t`, and `levels` are as in [`tricontour`](@ref).
+Draw a filled contour plot of unstructured triangular data. `x`, `y`, and `z` are
+one-dimensional input arrays of the same length (the number of points). `t` is an integer
+array of size `(3,nt)`, where `nt` is the number of triangles. The coordinates of the `i`th
+vertex of the `j`th triangle are given by `(x[t[i,j]], y[t[i,j]])`. Function values at
+vertices are specified by the `z` array, and contours levels are defined by `levels.`
 
 `tricontourf` results in regions *between* the contour levels, such that specifying `n`
 levels will result in `n-1` regions. If `levels` is an array, it will be augmented to
