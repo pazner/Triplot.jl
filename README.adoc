@@ -50,4 +50,6 @@ image::img/sine.png[sine,500,500]
 
 image::img/sine_pcolor.png[sine_pcolor,500,500]
 
+image::img/basis.png[basis,500,500]
+
 image::img/dolphin.png[dolphin,500,500]
