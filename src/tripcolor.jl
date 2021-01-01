@@ -17,6 +17,13 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
     _,_,px,py = GR.inqdspsize()
     c = zeros(UInt32,px,py)
 
+    # Precompute encoded RGBA values of colormap values
+    cmap = zeros(UInt32,256)
+    for i=0:255
+        # Pixel is encoded as 0xAABBGGRR, GR.inqcolor returns 0x00BBGGRR, so set opaque
+        cmap[begin+i] = 0xff000000 | GR.inqcolor(1000+i)
+    end
+
     xmin,xmax = extrema(x)
     ymin,ymax = extrema(y)
     isnothing(zmin) && (zmin = minimum(z))
@@ -30,8 +37,7 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
         yt = y[t[:,it]]
         zt = z[t[:,it]]
 
-        T = [xt[1]-xt[3] xt[2]-xt[3] ; yt[1]-yt[3] yt[2]-yt[3]]
-        T_lu = lu(T)
+        detT = (yt[2]-yt[3])*(xt[1]-xt[3]) + (xt[3]-xt[2])*(yt[1]-yt[3])
 
         xmint,xmaxt = extrema(xt)
         ymint,ymaxt = extrema(yt)
@@ -47,16 +53,17 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             cx = xmin + i/px*w
             cy = ymin + j/py*h
             # Convert from Cartesian to barycentric coordinates
-            λ1,λ2 = T_lu\[cx-xt[3], cy-yt[3]]
+            # λ1,λ2 = T_lu\[cx-xt[3], cy-yt[3]]
+            λ1 = ((yt[2] -yt[3])*(cx-xt[3]) + (xt[3]-xt[2])*(cy-yt[3]))/detT
+            λ2 = ((yt[3] -yt[1])*(cx-xt[3]) + (xt[1]-xt[3])*(cy-yt[3]))/detT
             λ3 = 1 - λ1 - λ2
-            λ = [λ1,λ2,λ3]
             tol = 1e-12
-            valid = all((λ .>= -tol) .& (λ .<= 1+tol))
+            valid = λ1>=-tol && λ2<=1+tol && λ2>=-tol && λ2<=1+tol && λ3>=-tol && λ3<=1+tol
             # If pixel is outside of triangle, move on to next pixel
             !valid  && continue
-            zval = clamp(zt'*[λ1,λ2,λ3],zmin,zmax)
-            # Pixel is encoded as 0xAABBGGRR, GR.inqcolor returns 0x00BBGGRR, so set opaque
-            c[i+1,py-j] = 0xff000000 | GR.inqcolor(getcolorind(zval,zmin,zmax))
+            zval = zt[1]*λ1 + zt[2]*λ2 + zt[3]*λ3
+            zval = clamp(zval,zmin,zmax)
+            c[i+1,py-j] = cmap[begin+getcolorind(zval,zmin,zmax)-1000]
         end
     end
     GR.drawimage(0,1,0,1,Int(px),Int(py),c,GR.MODEL_RGB)
