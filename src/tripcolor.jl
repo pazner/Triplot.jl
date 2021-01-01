@@ -53,7 +53,6 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             cx = xmin + i/px*w
             cy = ymin + j/py*h
             # Convert from Cartesian to barycentric coordinates
-            # λ1,λ2 = T_lu\[cx-xt[3], cy-yt[3]]
             λ1 = ((yt[2] -yt[3])*(cx-xt[3]) + (xt[3]-xt[2])*(cy-yt[3]))/detT
             λ2 = ((yt[3] -yt[1])*(cx-xt[3]) + (xt[1]-xt[3])*(cy-yt[3]))/detT
             λ3 = 1 - λ1 - λ2
