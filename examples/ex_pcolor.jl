@@ -1,5 +1,5 @@
 import GR
-using Tricontour
+using Triplot
 
 include("common.jl")
 
