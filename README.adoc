@@ -17,8 +17,8 @@ in the triangular mesh. `x` and `y` define the coordinates of the vertices, and
 `z` defines the function values at each vertex.
 
 The array `t` is an integer array of size `(3,nt)`, where `nt` is the number of
-triangles in the mesh. `t[i,j]` is the index of the `i`th vertex of the `j`th
-triangle, and so `(x[t[i,j]], y[t[i,j]])` are its coordinates.
+triangles in the mesh. `t[i,j]` is the index of the ``i``th vertex of the
+``j``th triangle, and so `(x[t[i,j]], y[t[i,j]])` are its coordinates.
 
 `tricontour` and `tricontourf` take a `levels` argument, that can either be an
 integer (for evenly spaced levels between the data bounds), or an array of
