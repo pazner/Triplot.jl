@@ -15,7 +15,7 @@ the minimum and maximum values of the `z` array will be used.
 """
 function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
     _,_,px,py = GR.inqdspsize()
-    c = zeros(Int,px,py)
+    c = zeros(UInt32,px,py)
 
     xmin,xmax = extrema(x)
     ymin,ymax = extrema(y)
@@ -55,8 +55,9 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             # If pixel is outside of triangle, move on to next pixel
             !valid  && continue
             zval = clamp(zt'*[λ1,λ2,λ3],zmin,zmax)
-            c[i+1,py-j] = getcolorind(zval,zmin,zmax)
+            # Pixel is encoded as 0xAABBGGRR, GR.inqcolor returns 0x00BBGGRR, so set opaque
+            c[i+1,py-j] = 0xff000000 | GR.inqcolor(getcolorind(zval,zmin,zmax))
         end
     end
-    GR.cellarray(0,1,0,1,Int(px),Int(py),c)
+    GR.drawimage(0,1,0,1,Int(px),Int(py),c,GR.MODEL_RGB)
 end
