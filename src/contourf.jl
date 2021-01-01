@@ -32,7 +32,7 @@ function tricontourf(m::TriMesh, z, levels)
     for i=1:nlevels-1
         lower = levels[i]
         upper = levels[i+1]
-        contours = generate_filled_contour(m, z, lower, upper)
+        contours = generate_filled_contours(m, z, lower, upper)
         x = Float64[]
         y = Float64[]
         for c=contours
@@ -49,8 +49,8 @@ function append_with_nan!(a, b)
     push!(a, NaN)
 end
 
-function generate_filled_contour(m::TriMesh, z, lower, upper)
-    reset_visited(m)
+function generate_filled_contours(m::TriMesh, z, lower, upper)
+    reset_visited!(m)
     contours = Vector{Contour}()
     add_filled_bdr_lines!(contours, m, z, lower, upper)
     add_interior_lines!(contours, m, z, lower; on_upper=false, filled=true);

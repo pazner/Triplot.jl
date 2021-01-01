@@ -1,6 +1,6 @@
 module Tricontour
 
-using GR
+import GR
 
 export tricontour, tricontourf
 

@@ -1,6 +1,6 @@
 struct TriEdge
-    ie::Int
-    it::Int
+    ie::Int # Edge index in range [1,3]
+    it::Int # Triangle index in range [1,nt]
 end
 
 struct TriMesh{X,Y,T}
@@ -95,7 +95,7 @@ function get_neighbor_edge(m::TriMesh, edge::TriEdge)
     end
 end
 
-function reset_visited(m::TriMesh)
+function reset_visited!(m::TriMesh)
     m.visited .= false
     for bv=m.bdr_visited
         bv .= false

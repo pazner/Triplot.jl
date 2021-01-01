@@ -31,7 +31,7 @@ function tricontour(m::TriMesh, z, levels)
     @assert issorted(levels)
     lmin,lmax = extrema(levels)
     for level=levels
-        contours = generate_unfilled_contour(m, z, level)
+        contours = generate_unfilled_contours(m, z, level)
         GR.setlinecolorind(getcolorind(level,lmin,lmax))
         for c=contours
             x = first.(c)
@@ -46,8 +46,8 @@ function getcolorind(level,lmin,lmax)
     round(Int,1000 + 255*cfrac)
 end
 
-function generate_unfilled_contour(m::TriMesh, z, level)
-    reset_visited(m)
+function generate_unfilled_contours(m::TriMesh, z, level)
+    reset_visited!(m)
     contours = Vector{Contour}()
     add_bdr_lines!(contours, m, z, level)
     add_interior_lines!(contours, m, z, level; on_upper=false, filled=false)
