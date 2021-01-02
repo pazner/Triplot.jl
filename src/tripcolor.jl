@@ -24,26 +24,26 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
 
     xmin,xmax = extrema(x)
     ymin,ymax = extrema(y)
-    isnothing(zmin) && (zmin = minimum(z))
-    isnothing(zmax) && (zmax = maximum(z))
     w = xmax-xmin
     h = ymax-ymin
+    isnothing(zmin) && (zmin = minimum(z))
+    isnothing(zmax) && (zmax = maximum(z))
 
     nt = size(t,2)
     for it=1:nt
-        xt = x[t[:,it]]
-        yt = y[t[:,it]]
-        zt = z[t[:,it]]
+        xt = @views x[t[:,it]]
+        yt = @views y[t[:,it]]
+        zt = @views z[t[:,it]]
 
         detT = (yt[2]-yt[3])*(xt[1]-xt[3]) + (xt[3]-xt[2])*(yt[1]-yt[3])
 
         xmint,xmaxt = extrema(xt)
         ymint,ymaxt = extrema(yt)
 
-        x0 = floor(Int, (xmint-xmin)/w*px)
-        x1 = ceil(Int, (xmaxt-xmin)/w*px)
-        y0 = floor(Int, (ymint-ymin)/h*py)
-        y1 = ceil(Int, (ymaxt-ymin)/h*py)
+        x0 = floor(Int,(xmint-xmin)/w*px)
+        x1 = ceil(Int,(xmaxt-xmin)/w*px)
+        y0 = floor(Int,(ymint-ymin)/h*py)
+        y1 = ceil(Int,(ymaxt-ymin)/h*py)
 
         # Loop over all pixels in triangle's bounding box
         for i=x0:x1-1, j=y0:y1-1
@@ -55,13 +55,12 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             λ2 = ((yt[3] -yt[1])*(cx-xt[3]) + (xt[1]-xt[3])*(cy-yt[3]))/detT
             λ3 = 1 - λ1 - λ2
             tol = 1e-12
-            valid = λ1>=-tol && λ2<=1+tol && λ2>=-tol && λ2<=1+tol && λ3>=-tol && λ3<=1+tol
             # If pixel is outside of triangle, move on to next pixel
-            !valid  && continue
+            (λ1>-tol && λ2<1+tol && λ2>-tol && λ2<1+tol && λ3>-tol && λ3<1+tol) || continue
             zval = zt[1]*λ1 + zt[2]*λ2 + zt[3]*λ3
             zval = clamp(zval,zmin,zmax)
             c[i+1,py-j] = cmap[begin+getcolorind(zval,zmin,zmax)-1000]
         end
     end
-    GR.drawimage(0,1,0,1,Int(px),Int(py),c,GR.MODEL_RGB)
+    GR.drawimage(0,1,0,1,Int(px),Int(py),c)
 end
