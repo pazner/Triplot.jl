@@ -1,5 +1,3 @@
-import LinearAlgebra: lu
-
 """
     tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
 
