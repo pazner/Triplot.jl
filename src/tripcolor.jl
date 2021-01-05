@@ -12,11 +12,11 @@ by specifying values for `zmin` and `zmax`. If these parameters are set to `noth
 the minimum and maximum values of the `z` array will be used.
 """
 function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
-    c = rasterize(x, y, z, t; zmin, zmax)
+    c = rasterize(x, y, z, t; zmin, zmax, yflip=true)
     GR.drawimage(0,1,0,1,size(c,1),size(c,2),c)
 end
 
-function rasterize(x, y, z, t; px=nothing, py=nothing, zmin=nothing, zmax=nothing)
+function rasterize(x, y, z, t; yflip=false, px=nothing, py=nothing, zmin=nothing, zmax=nothing)
     _,_,px_dsp,py_dsp = GR.inqdspsize()
     isnothing(px) && (px = px_dsp)
     isnothing(py) && (py = py_dsp)
@@ -67,7 +67,7 @@ function rasterize(x, y, z, t; px=nothing, py=nothing, zmin=nothing, zmax=nothin
             (λ1>-tol && λ2<1+tol && λ2>-tol && λ2<1+tol && λ3>-tol && λ3<1+tol) || continue
             zval = zt[1]*λ1 + zt[2]*λ2 + zt[3]*λ3
             zval = clamp(zval,zmin,zmax)
-            c[i+1,py-j] = cmap[begin+getcolorind(zval,zmin,zmax)-1000]
+            c[i+1,yflip ? py-j : j+1] = cmap[begin+getcolorind(zval,zmin,zmax)-1000]
         end
     end
     c
