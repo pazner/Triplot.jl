@@ -12,7 +12,15 @@ by specifying values for `zmin` and `zmax`. If these parameters are set to `noth
 the minimum and maximum values of the `z` array will be used.
 """
 function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
-    _,_,px,py = GR.inqdspsize()
+    c = rasterize(x, y, z, t; zmin, zmax)
+    GR.drawimage(0,1,0,1,size(c,1),size(c,2),c)
+end
+
+function rasterize(x, y, z, t; px=nothing, py=nothing, zmin=nothing, zmax=nothing)
+    _,_,px_dsp,py_dsp = GR.inqdspsize()
+    isnothing(px) && (px = px_dsp)
+    isnothing(py) && (py = py_dsp)
+
     c = zeros(UInt32,px,py)
 
     # Precompute encoded RGBA values of colormap values
@@ -62,5 +70,5 @@ function tripcolor(x, y, z, t; zmin=nothing, zmax=nothing)
             c[i+1,py-j] = cmap[begin+getcolorind(zval,zmin,zmax)-1000]
         end
     end
-    GR.drawimage(0,1,0,1,Int(px),Int(py),c)
+    c
 end
